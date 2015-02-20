@@ -14,16 +14,19 @@ public class Bank {
 		taxRateMap.put(from+" "+to, rate);
 	}
 
-	public Money reduce(Expression sum) {
-		double currentRate = 0;
-		Money firstOperand = sum.operand;
-		while(sum.recursive != null){
-			sum = sum.recursive;
-			Money secondOperand = sum.operand;
-			String rateMap = secondOperand.currency() + " " + firstOperand.currency();
-			currentRate = taxRateMap.get(rateMap);
-			firstOperand = firstOperand.plus(secondOperand.times(currentRate));
+	public Money reduce(Expression expresion) {
+		Money firstOperand = expresion.operand;
+		while(expresion.recursive != null){
+			expresion = expresion.recursive;
+			firstOperand = applyOperation(expresion, firstOperand);
 		}
+		return firstOperand;
+	}
+
+	private Money applyOperation(Expression sum, Money firstOperand) {
+		Money secondOperand = sum.operand;
+		String rateMap = secondOperand.currency() + " " + firstOperand.currency();
+		firstOperand = firstOperand.plus(secondOperand.times(taxRateMap.get(rateMap)));
 		return firstOperand;
 	}
 }
