@@ -3,10 +3,10 @@ package xpeppers.training.tdd;
 
  class Money {
 	
-	protected int amount;
+	protected double amount;
 	protected String currency;
 	
-	public Money(int amount, String currency){
+	public Money(double amount, String currency){
 		this.amount = amount;
 		this.currency = currency;
 	}
@@ -17,14 +17,17 @@ package xpeppers.training.tdd;
 			&& currency == money.currency;
 	}
 	
-	static Money dollar(int amount){
+	static Money dollar(double amount){
 		return new Money(amount, "USD");
 	}
-	static Money franc(int amount){
+	static Money franc(double amount){
 		return new Money(amount, "CHF");
 	}
+	static Money pound(double amount){
+		return new Money(amount, "GBP");
+	}
 	
-	public Money times(int multiplier){
+	public Money times(double multiplier){
 		return new Money(amount * multiplier, currency);
 	}
 
@@ -39,5 +42,6 @@ package xpeppers.training.tdd;
 	public Money plus(Money addend) {
 		return new Money(this.amount + addend.amount, this.currency);
 	}
+
 	
 }
