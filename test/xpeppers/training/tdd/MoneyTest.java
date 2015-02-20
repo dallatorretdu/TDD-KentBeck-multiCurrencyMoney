@@ -14,7 +14,7 @@ public class MoneyTest {
 		bank.addRate("USD", "GBP", 0.25);
 		bank.addRate("GBP", "USD", 4);
 		bank.addRate("GBP", "CHF", 5);
-
+		
 		bank.addRate("USD", "USD", 1);
 		bank.addRate("GBP", "GBP", 1);
 		bank.addRate("CHF", "CHF", 1);
@@ -55,7 +55,7 @@ public class MoneyTest {
 	};
 	
 	@Test
-	public void testAddition() {
+	public void testAdditionOnMoney() {
 		assertEquals(Money.dollar(15), Money.dollar(5).plus(Money.dollar(10)));
 		assertEquals(Money.franc(15), Money.franc(10).plus(Money.franc(5)));
 	};
@@ -65,12 +65,12 @@ public class MoneyTest {
 		Bank bank = new Bank();
 		bank.addRate("CHF", "USD", 0.5);
 		bank.addRate("USD", "CHF", 2);
-		Expression sumFrancsToDollars = new Expression(Money.franc(10)).add(Money.dollar(5));
-		Expression sumDollarsToFrancs = new Expression(Money.dollar(5)).add(Money.franc(10));
-		Money totalsumFrancsToDollars = bank.reduce(sumFrancsToDollars);
-		Money totalsumDollarsToFrancs = bank.reduce(sumDollarsToFrancs);
-		assertEquals(Money.dollar(10) , totalsumFrancsToDollars);
-		assertEquals(Money.franc(20) , totalsumDollarsToFrancs);
+		Expression sumFrancsToDollars = new Expression(Money.franc(10))
+												.add(Money.dollar(5));
+		Expression sumDollarsToFrancs = new Expression(Money.dollar(5))
+												.add(Money.franc(10));
+		assertEquals(Money.dollar(10) , bank.reduce(sumFrancsToDollars));
+		assertEquals(Money.franc(20) , bank.reduce(sumDollarsToFrancs));
 	};
 	
 	@Test
