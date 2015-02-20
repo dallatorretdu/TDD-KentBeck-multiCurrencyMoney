@@ -16,10 +16,10 @@ public class Bank {
 
 	public Money reduce(Expression sum) {
 		double currentRate = 0;
-		Money firstOperand = sum.aguend;
-		while(sum.addend != null){
-			sum = sum.addend;
-			Money secondOperand = sum.aguend;
+		Money firstOperand = sum.operand;
+		while(sum.recursive != null){
+			sum = sum.recursive;
+			Money secondOperand = sum.operand;
 			String rateMap = secondOperand.currency() + " " + firstOperand.currency();
 			currentRate = taxRateMap.get(rateMap);
 			firstOperand = firstOperand.plus(secondOperand.times(currentRate));

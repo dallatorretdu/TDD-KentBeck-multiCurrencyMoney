@@ -1,26 +1,32 @@
 package xpeppers.training.tdd;
 
 public class Expression {
-	protected Money aguend;
-	protected Expression addend;
+	protected Money operand;
+	protected Expression recursive;
 	
 	public Expression(Money aguend){
-		this.aguend = aguend;
+		this.operand = aguend;
 	}
-	public Expression(Money aguend, Expression addend){
-		this.aguend = aguend;
-		this.addend = addend;
+	public Expression(Money aguend, Expression currentExpression){
+		this.operand = aguend;
+		this.recursive = currentExpression;
 	}
 	
-	public Expression addTo(Money aguend){
-		this.addend = new Expression(this.aguend, this.addend);
-		this.aguend = aguend;
+	public Expression add(Money aguend){
+		this.recursive = new Expression(this.operand, this.recursive);
+		this.operand = aguend;
 		return this;
 	}
 	
-	public Expression convertTo(String toValue){
-		this.addend = new Expression(this.aguend, this.addend);
-		this.aguend = new Money(0, toValue);
+	public Expression subtract(Money aguend){
+		this.recursive = new Expression(this.operand, this.recursive);
+		this.operand = aguend.times(-1);
+		return this;
+	}
+	
+	public Expression convertTo(String resultvalueCode){
+		this.recursive = new Expression(this.operand, this.recursive);
+		this.operand = new Money(0, resultvalueCode);
 		return this;
 	}
 }
