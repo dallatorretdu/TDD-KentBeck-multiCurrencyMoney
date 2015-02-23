@@ -22,46 +22,39 @@ public class MoneyTest {
 	}
 	
 	@Test	
-	public void testMultipliationOnDollars() {
-		Money five = Money.dollar(5);
-		assertEquals(Money.dollar(10), five.times(2));
-		assertEquals(Money.dollar(15), five.times(3));
+	public void testMultipliationOnMoneyCalculatesCorrectly() {
+		assertEquals(Money.dollar(10), Money.dollar(5).times(2));
+		assertEquals(Money.pound(15), Money.pound(5).times(3));
 	};
 	
 	@Test
-	public void testEqualityOnMoney() {
+	public void testEqualityOnMoneyOfSameAndMixedTipes() {
 		assertTrue(Money.dollar(5).equals( Money.dollar(5)));
 		assertFalse(Money.dollar(5).equals( Money.dollar(12)));
 		assertTrue(Money.franc(5).equals( Money.franc(5)));
 		assertFalse(Money.franc(5).equals( Money.franc(12)));
-	};
-	
-	@Test	
-	public void testMultipliationOnFrancs() {
-		Money five = Money.franc(5);
-		assertEquals(Money.franc(10), five.times(2));
-		assertEquals(Money.franc(15), five.times(3));
-	};
-	
-	@Test
-	public void testEqualityBetweenCurrenciesFails() {
-		assertFalse(Money.dollar(5).equals( Money.franc(5)));
+		assertTrue(Money.pound(5).equals( Money.pound(5)));
+		assertFalse(Money.pound(5).equals( Money.pound(12)));
+		
+		assertFalse(Money.dollar(5).equals( Money.pound(5)));
 	};
 	
 	@Test
 	public void testCurrencies() {
 		assertEquals("USD", Money.dollar(1).currency());
 		assertEquals("CHF", Money.franc(1).currency());
+		assertEquals("GBP", Money.pound(1).currency());
 	};
 	
 	@Test
-	public void testAdditionOnMoney() {
+	public void testAdditionOnMoneyClass() {
 		assertEquals(Money.dollar(15), Money.dollar(5).plus(Money.dollar(10)));
 		assertEquals(Money.franc(15), Money.franc(10).plus(Money.franc(5)));
+		assertEquals(Money.pound(15), Money.pound(10).plus(Money.pound(5)));
 	};
 	
 	//@Test
-	public void testAdditionOnDifferentCurrencies() {
+	public void testBankAdditionOnDifferentCurrencies() {
 		Bank bank = new Bank();
 		bank.addRate("CHF", "USD", 0.5);
 		bank.addRate("USD", "CHF", 2);
@@ -73,18 +66,8 @@ public class MoneyTest {
 		assertEquals(Money.franc(20) , bank.reduce(sumDollarsToFrancs));
 	};
 	
-	@Test
-	public void testExpressionStoresOperands() {
-		Money dollars = Money.dollar(5);
-		Money francs = Money.franc(10);
-		Expression sum = new Expression(francs).add(dollars).add(dollars);
-		assertTrue(sum.operand.equals(dollars));
-		assertTrue(sum.recursive.operand.equals(dollars));
-		assertTrue(sum.recursive.recursive.operand.equals(francs));
-	}
-	
 	//@Test
-	public void testAdditionOnTripleCurrencies() {
+	public void testBankAdditionOnTripleCurrencies() {
 		Bank bank = bankRatesSetup();
 		
 		Expression sumFrancsToDollars = new Expression(Money.franc(22)).add(Money.dollar(9));
@@ -97,16 +80,24 @@ public class MoneyTest {
 	};
 	
 	//@Test
-	public void testConvertCurrencies() {
-		Money dollars = Money.dollar(150);
+	public void testExpressionCanConvertCurrencies() {
 		Bank bank = bankRatesSetup();
-		Expression convertedFrancs = new Expression(dollars).convertTo("CHF");
-		Money totalDollarsFrancs = bank.reduce(convertedFrancs);
-		assertEquals(Money.franc(187.5) , totalDollarsFrancs);
+		Expression convertToFrancs = new Expression(Money.dollar(150)).convertTo("CHF");
+		assertEquals(Money.franc(187.5) , bank.reduce(convertToFrancs));
 	};
 	
 	@Test
-	public void testChainedSums() {
+	public void testExpressionStoresOperandsRecursively() {
+		Money dollars = Money.dollar(5);
+		Money francs = Money.franc(10);
+		Expression sum = new Expression(francs).add(dollars).add(dollars);
+		assertTrue(sum.operand.equals(dollars));
+		assertTrue(sum.recursive.operand.equals(dollars));
+		assertTrue(sum.recursive.recursive.operand.equals(francs));
+	}
+	
+	@Test
+	public void testBankChainedExpressionSumsOnDollars() {
 		Bank bank = bankRatesSetup();
 		Expression sumDollars = new Expression(Money.dollar(50))
 									.add(Money.dollar(50))
@@ -116,7 +107,7 @@ public class MoneyTest {
 	};
 	
 	@Test
-	public void testMixedChainedSums() {
+	public void testBankChainedChainedSumsWithConversions() {
 		Bank bank = bankRatesSetup();
 		Expression sumDollars = new Expression(Money.dollar(50))
 									.add(Money.dollar(70))
@@ -128,7 +119,7 @@ public class MoneyTest {
 	};
 	
 	@Test
-	public void testMixedSubtractions() {
+	public void testBankExpressionCanHandleSubtractions() {
 		Bank bank = bankRatesSetup();
 		Expression sumDollars = new Expression(Money.dollar(60))
 									.subtract(Money.dollar(50));

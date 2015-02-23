@@ -11,12 +11,6 @@ package xpeppers.training.tdd;
 		this.currency = currency;
 	}
 	
-	public boolean equals(Object object){
-		Money money = (Money) object;
-		return amount == money.amount
-			&& currency == money.currency;
-	}
-	
 	static Money dollar(double amount){
 		return new Money(amount, "USD");
 	}
@@ -31,6 +25,10 @@ package xpeppers.training.tdd;
 		return new Money(amount * multiplier, currency);
 	}
 
+	public Money plus(Money addend) {
+		return new Money(this.amount + addend.amount, this.currency);
+	}
+
 	public String currency() {
 		return currency;
 	}
@@ -38,9 +36,11 @@ package xpeppers.training.tdd;
 	public String toString() {
 		return amount + " " + currency;
 	}
-
-	public Money plus(Money addend) {
-		return new Money(this.amount + addend.amount, this.currency);
+	
+	public boolean equals(Object object){
+		Money money = (Money) object;
+		return amount == money.amount
+			&& currency == money.currency;
 	}
 
 	
