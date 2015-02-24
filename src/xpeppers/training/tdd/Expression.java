@@ -5,29 +5,33 @@ public class Expression {
 	protected Expression recursive;
 	
 	public Expression(Money aguend){
-		this.operand = aguend;
+		operand = aguend;
 	}
-	public Expression(Money aguend, Expression currentExpression){
-		this.operand = aguend;
-		this.recursive = currentExpression;
+	private Expression(Money aguend, Expression currentExpression){
+		operand = aguend;
+		recursive = currentExpression;
 	}
 	
 	public Expression add(Money aguend){
-		this.recursive = new Expression(this.operand, this.recursive);
-		this.operand = aguend;
+		nestExpressionInRecursive();
+		operand = aguend;
 		return this;
 	}
 	
 	public Expression subtract(Money aguend){
-		this.recursive = new Expression(this.operand, this.recursive);
-		this.operand = aguend.times(-1);
+		nestExpressionInRecursive();
+		operand = aguend.times(-1);
 		return this;
 	}
 	
-	public Expression convertTo(String resultvalueCode){
-		this.recursive = new Expression(this.operand, this.recursive);
-		this.operand = new Money(0, resultvalueCode);
+	public Expression convertTo(String desideredMoneyCode){
+		nestExpressionInRecursive();
+		operand = new Money(0, desideredMoneyCode);
 		return this;
+	}	
+
+	private void nestExpressionInRecursive() {
+		recursive = new Expression(operand, recursive);
 	}
 }
 

@@ -15,18 +15,30 @@ public class Bank {
 	}
 
 	public Money reduce(Expression expresion) {
-		Money firstOperand = expresion.operand;
-		while(expresion.recursive != null){
+		Money currentResult = expresion.operand;
+		while(thereAreMoreOperandsIn(expresion)){
 			expresion = expresion.recursive;
-			firstOperand = executeOperation(expresion, firstOperand);
+			currentResult = executeOperation(expresion, currentResult);
 		}
-		return firstOperand;
+		return currentResult;
 	}
 
-	private Money executeOperation(Expression sum, Money firstOperand) {
-		Money secondOperand = sum.operand;
-		String rateMap = secondOperand.currency() + " " + firstOperand.currency();
-		firstOperand = firstOperand.plus(secondOperand.times(taxRateMap.get(rateMap)));
-		return firstOperand;
+	private boolean thereAreMoreOperandsIn(Expression expresion) {
+		return expresion.recursive != null;
+	}
+
+	private Money executeOperation(Expression expression, Money firstOp) {
+		Money secondOp = expression.operand;
+		secondOp = convert(secondOp, taxRateIdentifier(firstOp, secondOp));
+		firstOp = firstOp.plus(secondOp);
+		return firstOp;
+	}
+
+	private Money convert(Money secondOperand, String rateMapIdentifier) {
+		return secondOperand.times(taxRateMap.get(rateMapIdentifier));
+	}
+
+	private String taxRateIdentifier(Money firstOperand, Money secondOperand) {
+		return secondOperand.currency() + " " + firstOperand.currency();
 	}
 }
