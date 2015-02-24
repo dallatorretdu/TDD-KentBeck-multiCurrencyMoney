@@ -53,7 +53,7 @@ public class MoneyTest {
 		assertEquals(Money.pound(15), Money.pound(10).plus(Money.pound(5)));
 	};
 	
-	//@Test
+	@Test
 	public void testBankAdditionOnDifferentCurrencies() {
 		Bank bank = new Bank();
 		bank.addRate("CHF", "USD", 0.5);
@@ -66,7 +66,7 @@ public class MoneyTest {
 		assertEquals(Money.franc(20) , bank.reduce(sumDollarsToFrancs));
 	};
 	
-	//@Test
+	@Test
 	public void testBankAdditionOnTripleCurrencies() {
 		Bank bank = bankRatesSetup();
 		
@@ -79,7 +79,7 @@ public class MoneyTest {
 		assertEquals(Money.pound(10.65) , totalInPounds);
 	};
 	
-	//@Test
+	@Test
 	public void testExpressionCanConvertCurrencies() {
 		Bank bank = bankRatesSetup();
 		Expression convertToFrancs = new Expression(Money.dollar(150)).convertTo("CHF");

@@ -30,3 +30,9 @@ public class Expression {
 		return this;
 	}
 }
+
+/*
+	SCRATCHPAD
+	- La concatenazione va in coda o in testa?
+	- La conversione va effettuata verso l'operando di destra o sinistra?
+*/

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Bank {
-	Map<String, Double> taxRateMap;
+	private Map<String, Double> taxRateMap;
 	
 	public Bank(){
 		taxRateMap = new HashMap<String, Double>();

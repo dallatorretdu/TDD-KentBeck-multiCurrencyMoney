@@ -3,8 +3,8 @@ package xpeppers.training.tdd;
 
  class Money {
 	
-	protected double amount;
-	protected String currency;
+	private double amount;
+	private String currency;
 	
 	public Money(double amount, String currency){
 		this.amount = amount;
