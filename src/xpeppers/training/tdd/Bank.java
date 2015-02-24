@@ -4,41 +4,44 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Bank {
-	private Map<String, Double> taxRateMap;
-	
-	public Bank(){
-		taxRateMap = new HashMap<String, Double>();
-	}
+    private Map<String, Double> taxRateMap;
 
-	public void addRate(String from, String to, double rate){
-		taxRateMap.put(from+" "+to, rate);
-	}
+    public Bank() {
+        taxRateMap = new HashMap<>();
+    }
 
-	public Money reduce(Expression expresion) {
-		Money currentResult = expresion.operand;
-		while(thereAreMoreOperandsIn(expresion)){
-			expresion = expresion.recursive;
-			currentResult = executeOperation(expresion, currentResult);
-		}
-		return currentResult;
-	}
+    public void addRate(String from, String to, Double rate) {
+        taxRateMap.put(from + " " + to, rate);
+    }
 
-	private boolean thereAreMoreOperandsIn(Expression expresion) {
-		return expresion.recursive != null;
-	}
+    public Money reduce(Expression expression) {
+        Money currentResult = expression.operand();
+        while (thereAreMoreOperandsIn(expression)) {
+            expression = expression.recursive();
+            currentResult = executeOperation(expression, currentResult);
+        }
+        return currentResult;
+    }
 
-	private Money executeOperation(Expression expression, Money firstOp) {
-		Money secondOp = expression.operand;
-		secondOp = convert(secondOp, taxRateIdentifier(firstOp, secondOp));
-		firstOp = firstOp.plus(secondOp);
-		return firstOp;
-	}
+    private boolean thereAreMoreOperandsIn(Expression expression) {
+        return expression.recursive() != null;
+    }
 
-	private Money convert(Money secondOperand, String rateMapIdentifier) {
-		return secondOperand.times(taxRateMap.get(rateMapIdentifier));
-	}
+    private Money executeOperation(Expression expression, Money money) {
+        Money anotherMoney = expression.operand();
+        anotherMoney = convert(anotherMoney, taxRateIdentifier(money, anotherMoney));
+        return money.plus(anotherMoney);
+    }
 
-	private String taxRateIdentifier(Money firstOperand, Money secondOperand) {
-		return secondOperand.currency() + " " + firstOperand.currency();
-	}
+    private Money convert(Money money, String rateMapIdentifier) {
+        return money.times(taxRateMap.get(rateMapIdentifier));
+    }
+
+    private String taxRateIdentifier(Money money, Money anotheMoney) {
+        return anotheMoney.currency() + " " + money.currency();
+    }
+
+    public Money operand(MoneyTest moneyTest, Expression sum) {
+        return sum.operand();
+    }
 }

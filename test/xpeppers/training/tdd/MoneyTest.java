@@ -18,12 +18,12 @@ public class MoneyTest {
         bank.addRate("CHF", "GBP", 0.2);
         bank.addRate("USD", "CHF", 1.25);
         bank.addRate("USD", "GBP", 0.25);
-        bank.addRate("GBP", "USD", 4);
-        bank.addRate("GBP", "CHF", 5);
+        bank.addRate("GBP", "USD", 4.0);
+        bank.addRate("GBP", "CHF", 5.0);
 
-        bank.addRate("USD", "USD", 1);
-        bank.addRate("GBP", "GBP", 1);
-        bank.addRate("CHF", "CHF", 1);
+        bank.addRate("USD", "USD", 1.0);
+        bank.addRate("GBP", "GBP", 1.0);
+        bank.addRate("CHF", "CHF", 1.0);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class MoneyTest {
     @Test
     public void aMoneyCanBeAddedToAnotherMoneyWithDifferentCurrencyUsingABankConversionRate() {
         bank.addRate("CHF", "USD", 0.5);
-        bank.addRate("USD", "CHF", 2);
+        bank.addRate("USD", "CHF", 2.0);
 
         Expression sumFrancsToDollars = new Expression(Money.franc(10)).add(Money.dollar(5));
         Expression sumDollarsToFrancs = new Expression(Money.dollar(5)).add(Money.franc(10));
@@ -93,9 +93,9 @@ public class MoneyTest {
         Money dollars = Money.dollar(5);
         Money francs = Money.franc(10);
         Expression sum = new Expression(francs).add(dollars).add(dollars);
-        assertTrue(sum.operand.equals(dollars));
-        assertTrue(sum.recursive.operand.equals(dollars));
-        assertTrue(sum.recursive.recursive.operand.equals(francs));
+        assertTrue(sum.operand().equals(dollars));
+        assertTrue(sum.recursive().operand().equals(dollars));
+        assertTrue(sum.recursive().recursive().operand().equals(francs));
     }
 
     @Test
@@ -108,10 +108,10 @@ public class MoneyTest {
     @Test
     public void bankChainedChainedSumsWithConversions() {
         Expression sumDollars = new Expression(Money.dollar(50))
-                .add(Money.dollar(70))
-                .add(Money.franc(100))
-                .add(Money.franc(250))
-                .convertTo("GBP");
+        .add(Money.dollar(70))
+        .add(Money.franc(100))
+        .add(Money.franc(250))
+        .convertTo("GBP");
 
         Money total = bank.reduce(sumDollars);
         assertEquals(Money.pound(100), total);
