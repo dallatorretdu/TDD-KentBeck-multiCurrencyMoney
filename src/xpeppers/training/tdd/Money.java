@@ -10,7 +10,7 @@ class Money {
         this.amount = amount;
         this.currency = currency;
     }
-
+        
     static Money dollar(double amount){
         return new Money(amount, "USD");
     }

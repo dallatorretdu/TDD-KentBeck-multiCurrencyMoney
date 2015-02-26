@@ -1,15 +1,24 @@
 package xpeppers.training.tdd;
 
 public class Expression {
-    protected Money operand;
-    protected Expression recursive;
+    private Money operand;
+    private Expression recursive;
 
     public Expression(Money aguend){
         operand = aguend;
     }
+    
     private Expression(Money aguend, Expression currentExpression){
         operand = aguend;
         recursive = currentExpression;
+    }
+
+    public Money operand() {
+        return operand;
+    }
+    
+    public Expression recursive() {
+        return recursive;
     }
 
     public Expression add(Money aguend){
